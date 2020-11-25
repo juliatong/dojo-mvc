@@ -1,0 +1,11 @@
+tasks:
+  - name: Server
+    init: make install
+    command: make run
+  - name: Test
+    init: make install
+    command: make test
+
+ports:
+  - port: 8080
+    onOpen: open-preview
