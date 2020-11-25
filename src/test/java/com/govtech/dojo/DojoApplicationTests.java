@@ -1,10 +1,10 @@
 package com.govtech.dojo;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class DojoApplicationTests {
+public class DojoApplicationTests {
 
 	@Test
 	void contextLoads() {
