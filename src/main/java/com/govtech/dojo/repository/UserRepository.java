@@ -1,12 +1,12 @@
 package com.govtech.dojo.repository;
 
-//import org.springframework.data.jpa.repository.JpaRepository;
-//import org.springframework.stereotype.Repository;
-//
-//import com.govtech.dojo.model.User;
-//
-//@Repository("userRepository")
-//public interface UserRepository extends JpaRepository<User, Long> {
-// 
-// User findByEmail(String email);
-//}
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.govtech.dojo.model.User;
+
+@Repository("userRepository")
+public interface UserRepository extends JpaRepository<User, Long> {
+
+ User findByEmail(String email);
+}
