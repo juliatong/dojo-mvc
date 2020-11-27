@@ -18,8 +18,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
- @Autowired
- private BCryptPasswordEncoder bCryptPasswordEncoder;
+// @Autowired
+// private BCryptPasswordEncoder bCryptPasswordEncoder;
  
 // @Autowired
 // private DataSource dataSource;
@@ -40,11 +40,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/", "/home").permitAll()
+				.antMatchers("/", "/home","/users/welcome","/users/logout").permitAll()
 				.anyRequest().authenticated()
 				.and()
 			.formLogin()
-				.loginPage("/login")
+				.loginPage("/signup")
 				.permitAll()
 				.and()
 			.logout()
