@@ -11,13 +11,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest(controllers = UserController.class)
 @ActiveProfiles("test")
+@WithMockUser
 public class UserControllerTest {
 
 	@Autowired
@@ -35,6 +41,9 @@ public class UserControllerTest {
 	@MockBean
 	private UserService userService;
 
+	@Autowired
+	private WebApplicationContext webApplicationContext;
+
 	private List<User> userList;
 
 	@Before
@@ -42,7 +51,10 @@ public class UserControllerTest {
 		this.userList = new ArrayList<>();
 		this.userList.add(new User());
 		this.userList.add(new User());
-
+		mockMvc = MockMvcBuilders
+				.webAppContextSetup(webApplicationContext)
+				.apply(springSecurity())
+				.build();
 	}
 
 	@Test
@@ -50,12 +62,11 @@ public class UserControllerTest {
 		User user = new User();
 		mockMvc.perform(get("/login").content(
 				"{\"userName\":\"testUserDetails\",\"firstName\":\"xxx\",\"lastName\":\"xxx\",\"password\":\"xxx\"}"))
-				.andDo(print()).andExpect(status().isOk()).andExpect(content().contentType(MediaType.TEXT_HTML));
+				.andDo(print()).andExpect(status().isOk()).andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
 	@Test
 	public void testHome() throws Exception {
-		User user = new User();
 		mockMvc.perform(get("/home").content(
 				"{\"userName\":\"testUserDetails\",\"firstName\":\"xxx\",\"lastName\":\"xxx\",\"password\":\"xxx\"}"))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().contentType(MediaType.TEXT_HTML));
@@ -64,9 +75,9 @@ public class UserControllerTest {
 	@Test
 	public void testCreateAccount() throws Exception {
 		User user = new User();
-		mockMvc.perform(post("/api/users").contentType(MediaType.APPLICATION_FORM_URLENCODED).content(
+		mockMvc.perform(post("/signup").contentType(MediaType.APPLICATION_FORM_URLENCODED).with(csrf()).content(
 				"{\"userName\":\"testUserDetails\",\"firstName\":\"xxx\",\"lastName\":\"xxx\",\"password\":\"xxx\"}"))
-				.andDo(print()).andExpect(status().isCreated()).andExpect(content().contentType(MediaType.TEXT_HTML));
+				.andDo(print()).andExpect(status().isCreated()).andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
 }
