@@ -9,7 +9,4 @@ public class DojoApplicationTests {
 	@Test
 	public void contextLoads() {
 	}
-
-
-
 }

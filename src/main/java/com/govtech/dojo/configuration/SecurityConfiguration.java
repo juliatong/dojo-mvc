@@ -18,45 +18,24 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-// @Autowired
-// private BCryptPasswordEncoder bCryptPasswordEncoder;
- 
-// @Autowired
-// private DataSource dataSource;
- 
-// private final String USERS_QUERY = "select email, password, active from user where email=?";
-// private final String ROLES_QUERY = "select u.email, r.role from user u inner join user_role ur on (u.id = ur.user_id) inner join role r on (ur.role_id=r.role_id) where u.email=?";
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-// @Override
-// protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//  auth.jdbcAuthentication()
-//   .usersByUsernameQuery(USERS_QUERY)
-//   .authoritiesByUsernameQuery(ROLES_QUERY)
-// //  .dataSource(dataSource)
-//   .passwordEncoder(bCryptPasswordEncoder);
-// }
- 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/", "/home","/users/welcome","/users/logout").permitAll()
-				.anyRequest().authenticated()
+				.antMatchers("/").permitAll()
+				.antMatchers("/h2-console/**", "/home").permitAll()
 				.and()
 			.formLogin()
-				.loginPage("/signup")
+				.loginPage("/login")
 				.permitAll()
 				.and()
 			.logout()
 				.permitAll();
-	}
 
- 
-// @Bean
-// public PersistentTokenRepository persistentTokenRepository() {
-//  JdbcTokenRepositoryImpl db = new JdbcTokenRepositoryImpl();
-//  db.setDataSource(dataSource);
-//  
-//  return db;
-// }
+		http.csrf().disable();
+		http.headers().frameOptions().disable();
+	}
 }

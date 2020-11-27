@@ -8,5 +8,5 @@ import com.govtech.dojo.model.Role;
 @Repository("roleRepository")
 public interface RoleRespository extends JpaRepository<Role, Integer> {
 
- Role findByRole(String role);
+    Role findByRole(String role);
 }
