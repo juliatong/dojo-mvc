@@ -71,6 +71,38 @@ public class UserController {
         model.setViewName("home/home");
         return model;
     }
+	
+	@RequestMapping(value = { "/users" }, method = RequestMethod.POST)
+	public ModelAndView loginPage(@Valid User user, BindingResult bindingResult) {
+		ModelAndView model = new ModelAndView();
+		User userExists = userService.findUserByEmail(user.getEmail());
+		
+		if (userExists == null) {
+			bindingResult.rejectValue("email", "error.user", "This account doesn't exists!");
+		} else {
+			model.setViewName("user/welcome");
+		}
+		
+		return model;
+	}
+	
+	
+	@RequestMapping(value = { "/users/welcome" }, method = RequestMethod.GET)
+	public ModelAndView welcome() {
+		ModelAndView model = new ModelAndView();
+
+		model.setViewName("user/welcome");
+		return model;
+	}	
+	
+	
+	@RequestMapping(value = { "/users/logout" }, method = RequestMethod.GET)
+	public ModelAndView logout() {
+		ModelAndView model = new ModelAndView();
+
+		model.setViewName("home/index");
+		return model;
+	}
 
     @RequestMapping(value = {"/access_denied"}, method = RequestMethod.GET)
     public ModelAndView accessDenied() {
