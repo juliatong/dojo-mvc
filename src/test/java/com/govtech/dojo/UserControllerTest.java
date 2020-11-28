@@ -34,9 +34,7 @@ import static org.springframework.security.test.web.servlet.setup.SecurityMockMv
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
 //@SpringBootTest(classes=DojoApplication.class)
@@ -114,12 +112,10 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@Ignore("Not implemented yet")
 	public void testLogout() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/users/logout"))
 				.andDo(print())
-				.andExpect(status().isOk())
-				.andExpect(content().contentType("text/html;charset=UTF-8"))
-				.andExpect(view().name("home/index"));	}
-
+				.andExpect(status().is3xxRedirection())
+				.andExpect(redirectedUrl("/?successMsg=Successfully+logged+out"));
+	}
 }
