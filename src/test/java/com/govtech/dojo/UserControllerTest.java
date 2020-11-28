@@ -101,14 +101,15 @@ public class UserControllerTest {
 		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(content().contentType("text/html;charset=UTF-8"))
-		.andExpect(view().name("user/welcome"));	}
+		.andExpect(view().name("user/welcome"));
+	}
 
 	@Test
 	@Ignore("Not implemented yet")
 	public void testLoginPage() throws Exception {
 		User user = new User();
 		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED).content(
-				"{\"userName\":\"testUserDetails\",\"firstName\":\"xxx\",\"lastName\":\"xxx\",\"password\":\"xxx\"}"))
+				"email=email@example.com&password=xxx"))
 				.andDo(print()).andExpect(status().isOk()).andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
