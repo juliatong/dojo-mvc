@@ -2,6 +2,7 @@ package com.govtech.dojo.configuration;
 
 //import javax.sql.DataSource;
 
+import com.govtech.dojo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,18 +19,15 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 
-	@Autowired
-	private BCryptPasswordEncoder bCryptPasswordEncoder;
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
 				.antMatchers("/").permitAll()
-				.antMatchers("/h2-console/**", "/home").permitAll()
 				.and()
 			.formLogin()
 				.loginPage("/login")
+				.usernameParameter("email")
 				.permitAll()
 				.and()
 			.logout()

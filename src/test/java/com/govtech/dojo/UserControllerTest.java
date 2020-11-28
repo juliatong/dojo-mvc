@@ -1,71 +1,42 @@
 package com.govtech.dojo;
 
-import com.govtech.dojo.configuration.SecurityConfiguration;
-import com.govtech.dojo.controller.UserController;
 import com.govtech.dojo.model.User;
 import com.govtech.dojo.service.UserService;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes=DojoApplication.class)
-//@AutoConfigureMockMvc
-@WebMvcTest(controllers = UserController.class)
-@ActiveProfiles("test")
-@WithMockUser
+@SpringBootTest(classes=DojoApplication.class)
+@AutoConfigureMockMvc
 public class UserControllerTest {
 
 	
 	@Autowired
 	private MockMvc mockMvc;
 
-	@MockBean
+	@Autowired
 	private UserService userService;
 
-	@Autowired
-	private WebApplicationContext webApplicationContext;
 
 	private List<User> userList;
 
 	@Before
-	public void setUp() {
-		this.userList = new ArrayList<>();
-		this.userList.add(new User());
-		this.userList.add(new User());
-		mockMvc = MockMvcBuilders
-				.webAppContextSetup(webApplicationContext)
-				.apply(springSecurity())
-				.build();
-	}
+	public void setUp() { }
 	
 	@Test
 	public void testHome() throws Exception {
@@ -88,12 +59,11 @@ public class UserControllerTest {
 	public void testCreateAccount() throws Exception {
 		User user = new User();
 		mockMvc.perform(post("/signup").contentType(MediaType.APPLICATION_FORM_URLENCODED).with(csrf()).content(
-				"{\"userName\":\"testUserDetails\",\"firstName\":\"xxx\",\"lastName\":\"xxx\",\"password\":\"xxx\"}"))
+				"{\"email\":\"demo@example.com\",\"firstName\":\"xxx\",\"lastName\":\"xxx\",\"password\":\"xxx\"}"))
 				.andDo(print()).andExpect(status().isCreated()).andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
 	@Test
-	@Ignore("Failing")
 	public void testWelcomePage() throws Exception {
 		this.mockMvc.perform(MockMvcRequestBuilders.get("/users/welcome"))
 		.andDo(print())
@@ -103,12 +73,16 @@ public class UserControllerTest {
 	}
 
 	@Test
-	@Ignore("Not implemented yet")
 	public void testLoginPage() throws Exception {
 		User user = new User();
-		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_FORM_URLENCODED).content(
+		user.setEmail("email@example.com");
+		user.setPassword("xxx");
+		userService.saveUser(user);
+
+		mockMvc.perform(post("/signin").contentType(MediaType.APPLICATION_FORM_URLENCODED).content(
 				"email=email@example.com&password=xxx"))
-				.andDo(print()).andExpect(status().isOk()).andExpect(content().contentType("text/html;charset=UTF-8"));
+				.andDo(print()).andExpect(status().isOk())
+				.andExpect(content().contentType("text/html;charset=UTF-8"));
 	}
 
 	@Test

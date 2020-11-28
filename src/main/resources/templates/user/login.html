@@ -31,14 +31,15 @@
                     <h2>Welcome to the Login Form Demo!</h2>
 
                     <div class="alert alert-danger" role="alert" th:if="${msg}" th:utext="${msg}"></div>
+                    <div class="alert alert-danger" role="alert" th:if="${param.error}">The email or password is incorrect!</div>
                     <div class="alert alert-success" role="alert" th:if="${param.successMsg}" th:utext="${param.successMsg}"></div>
 
                     <div class="card">
                         <div class="card-body">
-                            <form th:action="@{/users}" method="post">
+                            <form th:action="@{/signin}" method="post">
                                 <div class="form-group">
                                     <label for="exampleInputEmail1">Email address</label>
-                                    <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" name="email" required />
+                                    <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" name="email" required autofocus />
                                     <small class="form-text text-muted" id="emailHelp">We'll never share your email with anyone else.</small>
                                 </div>
                                 <div class="form-group">

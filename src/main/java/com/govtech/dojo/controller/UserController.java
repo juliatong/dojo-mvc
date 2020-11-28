@@ -1,12 +1,9 @@
 package com.govtech.dojo.controller;
 
-import javax.validation.Valid;
-
+import com.govtech.dojo.model.User;
+import com.govtech.dojo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -15,8 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.govtech.dojo.model.User;
-import com.govtech.dojo.service.UserService;
+import javax.validation.Valid;
 
 @Controller
 public class UserController {
@@ -63,16 +59,16 @@ public class UserController {
         return model;
     }
 
-	@RequestMapping(value = { "/users" }, method = RequestMethod.POST)
+	@RequestMapping(value = { "/signin" }, method = RequestMethod.POST)
 	public ModelAndView loginPage(@Valid User user, BindingResult bindingResult) {
 		ModelAndView model = new ModelAndView();
 		User userExists = userService.findUserByEmail(user.getEmail());
 
 		if (userExists == null) {
-//			bindingResult.rejectValue("email", "error.user", "This account doesn't exists!");
 			model.addObject("msg", "This account doesn't exists!");
 			model.setViewName("user/login");
 		} else {
+			model.addObject("userName", userExists.getFirstname());
 			model.setViewName("user/welcome");
 		}
 
@@ -88,10 +84,6 @@ public class UserController {
     @RequestMapping(value = {"/users/welcome"}, method = RequestMethod.GET)
     public ModelAndView home() {
         ModelAndView model = new ModelAndView();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        User user = userService.findUserByEmail(auth.getName());
-
-        model.addObject("userName", user.getFirstname() + " " + user.getLastname());
         model.setViewName("user/welcome");
         return model;
     }

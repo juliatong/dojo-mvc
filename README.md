@@ -74,11 +74,11 @@ TBC
 
     Sign up for new user account.
 
-4. `POST /users`
+4. `POST /signin`
 
     This is how you login to the app. You will need to login with `email` and `password`.
 
-    The default email is `demo@example.com` and password is `demo1234`.
+    Create a new user before trying to login.
 
 5. `GET /users/welcome`
 
