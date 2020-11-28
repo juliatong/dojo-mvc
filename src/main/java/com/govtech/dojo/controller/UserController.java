@@ -8,6 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -68,7 +69,9 @@ public class UserController {
 		User userExists = userService.findUserByEmail(user.getEmail());
 
 		if (userExists == null) {
-			bindingResult.rejectValue("email", "error.user", "This account doesn't exists!");
+//			bindingResult.rejectValue("email", "error.user", "This account doesn't exists!");
+			model.addObject("msg", "This account doesn't exists!");
+			model.setViewName("user/login");
 		} else {
 			model.setViewName("user/welcome");
 		}
@@ -77,11 +80,9 @@ public class UserController {
 	}
 
 	@RequestMapping(value = { "/users/logout" }, method = RequestMethod.GET)
-	public ModelAndView logout() {
-		ModelAndView model = new ModelAndView();
-
-		model.setViewName("home/index");
-		return model;
+	public ModelAndView logout(ModelMap model) {
+    	model.addAttribute("successMsg", "Successfully logged out");
+		return new ModelAndView("redirect:/", model);
 	}
 
     @RequestMapping(value = {"/users/welcome"}, method = RequestMethod.GET)
